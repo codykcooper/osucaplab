@@ -36,9 +36,6 @@
 
         // Experiment parameters
         var n_trials = 6;
-        var stimuli = ["img/face1.jpg", "img/face2.jpg","img/face1.jpg", "img/face2.jpg" ];
-        var stimuli_types = ["Adok", "Lork", "Adok", "Lork"];
-
         // Experiment Instructions
         var welcome_message = "<div id='instructions'><p>Welcome to the " +
             "experiment. Please press enter to begin.</p></div>";
@@ -55,6 +52,15 @@
         var debrief = "<div id='instructions'><p>Thank you for " +
             "participating!  Press enter to see the data.</p></div>";
 
+		// preload all images so there is no delay
+		function preload(arrayOfImages) {
+			$(arrayOfImages).each(function(){
+				(new Image()).src = this;
+			});
+		}
+		// then to call it, you would use this
+		var stimuli = ["img/face1.jpg", "img/face2.jpg"];
+        var stimuli_types = ["Adok", "Lork", "Adok", "Lork"];
         // Generating Random Order for Stimuli
         var stimuli_random_order = [];
         var opt_data = [];
@@ -67,7 +73,7 @@
                 "stimulus_type": stimuli_types[random_choice]
             });
         }
-
+		preload(stimuli_random_order);
         // Define experiment blocks
         var instruction_block = {
                 type: "text",
