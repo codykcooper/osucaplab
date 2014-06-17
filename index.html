@@ -9,6 +9,7 @@
         <script src="scripts/jspsych.js"></script>
         <script src="scripts/plugins/jspsych-text.js"></script>
         <script src="scripts/plugins/jspsych-single-stim.js"></script>
+		<script src="scripts/plugins/jspsych-html.js"></script>
         <!-- Load the stylesheet -->
         <link href="experiment.css" type="text/css" rel="stylesheet"></link>
     </head>
@@ -17,7 +18,22 @@
         <div id="jspsych_target"></div>
     </body>
 
-    <script>
+    <script type="text/javascript">
+	// consent form
+		var check_consent = function(elem) {
+            if ($('#consent_checkbox').is(':checked')) {
+                return true;
+            }
+            else {
+                alert("If you wish to participate, you must check the box next to the statement 'I agree to participate in this study.'");
+                return false;
+            }
+        };
+		var html_block = {
+				type:'html', 
+				pages: [{url: 'consent.html', cont_btn: "start", check_fn: check_consent}]
+				};
+
         // Experiment parameters
         var n_trials = 6;
         var stimuli = ["img/face1.jpg", "img/face2.jpg","img/face1.jpg", "img/face2.jpg" ];
@@ -72,11 +88,12 @@
                 type: "text",
                 text: [debrief]
             };
+		
 
 
         jsPsych.init({
             display_element: $('#jspsych_target'),
-            experiment_structure: [instruction_block, test_block, debrief_block],
+            experiment_structure: [html_block, instruction_block, test_block, debrief_block],
             on_finish: function(data) {
                 $("#jspsych_target").append($('<pre>', {
                     html: jsPsych.dataAsCSV()
