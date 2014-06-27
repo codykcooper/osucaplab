@@ -13,7 +13,7 @@
 		var plugin = {};
 		plugin.create = function(params) {
 			var trials = new Array(34);
-			for(var i = 0; i < 3; i++)
+			for(var i = 0; i < 12; i++)
 			{
 				trials[i] = {};
 				trials[i].type = "face-exp";
