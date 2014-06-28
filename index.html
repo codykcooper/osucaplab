@@ -51,17 +51,10 @@
         var debrief = "<div id='instructions'><p>Thank you for " +
             "participating!  Press enter to see the data.</p></div>";
 
-		// preload all images so there is minimal delay on first occurrence
-		function preload(arrayOfImages) {
-			$(arrayOfImages).each(function(){
-				(new Image()).src = this;
-			});
-		}
 		// Load stimuli into array for later calling
 		var face = ["img/r1.BMP","img/r2.BMP","img/r3.BMP","img/r4.BMP","img/r5.BMP","img/r6.BMP","img/r7.BMP","img/r8.BMP","img/r9.BMP","img/r10.BMP","img/r11.BMP","img/r12.BMP","img/r13.BMP","img/r14.BMP","img/r15.BMP","img/r16.BMP","img/r17.BMP","img/n1.BMP","img/n2.BMP","img/n3.BMP","img/n4.BMP","img/n5.BMP","img/n6.BMP","img/n7.BMP","img/n8.BMP","img/n9.BMP","img/n10.BMP","img/n11.BMP","img/n12.BMP","img/n13.BMP","img/n14.BMP","img/n15.BMP","img/n16.BMP","img/n17.BMP"];//array of image locations
 		var face1 = ["img/face1.jpg","img/face2.jpg"];
 		var shape=["r","r","r","r","r","r","r","r","r","r","r","r","r","r","r","r","r","n","n","n","n","n","n","n","n","n","n","n","n","n","n","n","n","n"];//will be used for prob assignment
-        var fixation= "img/AcDc.BMP";
 		var face_nat = ["Adok", "Lork"];//group membership options
         var face_disp = ["friendly","hostile"];//disposition choices
 
@@ -71,8 +64,18 @@
 		//shuffle(face,shape);//hopefully shuffles these as if there were consecutive columns of a matrix(i.e., row shuffle)
 		// use the above function to shuffle the images
 		
-		jsPsych.preloadImages(face);
-        // Define experiment blocks
+		function preload_message(images,target_id){
+			document.getElementById(target_id).innerHTML = '<p>Please wait while the experiment materials are loaded...</p>';
+			jsPsych.preloadImages(images);
+
+			}
+		var image_load={
+		type:'call-function',
+		func: preload_message,
+		args:['face',"'#jspsych_target'"]
+		};
+        
+		// Define experiment blocks
         var instruction_block = {
                 type: "text",
                 text: [welcome_message, instructions],
@@ -82,7 +85,6 @@
 		var CD_block = {
                 type: "face-exp",
                 stimuli: face,
-				fixation_img: fixation,
 				prompt1: '<p>Press "A" to categorize the face as an Adok. Press "L" to categorize the face as a Lork.</p>',
 				prompt2: '<p>Press "A" to act friendly towards the face you saw. Press "L" to act defensively to towards the face you saw.</p>'
             };
@@ -94,7 +96,7 @@
 		
         jsPsych.init({
             display_element: $('#jspsych_target'),
-            experiment_structure: [consent_block, instruction_block, CD_block,debrief_block],
+            experiment_structure: [consent_block,instruction_block,CD_block,debrief_block],
             on_finish: function(data) {
                 $("#jspsych_target").append($('<pre>', {
                     html: jsPsych.dataAsCSV()

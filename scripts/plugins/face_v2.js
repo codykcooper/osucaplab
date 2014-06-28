@@ -41,10 +41,10 @@
 		plugin.trial = function(display_element, block, trial, part) {
 			switch (part){	
 				case 1://start trial with a fixation screen
-					rtc=-1;
-					resp_c =-1;
-					rtd=-1;
-					resp_d =-1;
+					rtc=999;
+					resp_c =999;
+					rtd=999;
+					resp_d =999;
 					display_element.append($('<div>', {
                         "class": 'face-study-stimulus',
                         html: trial.fixation
@@ -111,7 +111,7 @@
 				break;				
 //************************************* Show Categorization Question ****************************************************************
 				case 7:
-					// show the prompt1
+					// show prompt1
 					if (trial.prompt1 !== "") {
 						display_element.append($('<div>', {
                         "class": 'face-study-stimulus',
@@ -162,7 +162,7 @@
 						
 					break;
 //*******************************************************************************************************************************
-				case 8://remove  prompt1 
+				case 8://remove prompt1 
 					$('.face-study-stimulus').remove();
 					// start timer
 					setTimeout(function() {
@@ -196,7 +196,7 @@
 				break;
 //************************ Show prompt2 ***********************************************************************************
 				case 11:
-					// show the prompt2
+					// show prompt2
 					if (trial.prompt2 !== "") {
 						display_element.append($('<div>', {
                         "class": 'face-study-stimulus',
@@ -238,12 +238,13 @@
 							//tcomplete = true;
 						}
 					};
-					$(document).keydown(resp_func2);
-					dec_timer = setTimeout(function() {//acts as trial timer
-						plugin.trial(display_element, block, trial, part + 1);
-						rtd=999;
-						resp_d=999;//
-						}, 5000);
+						$(document).keydown(resp_func2);
+						dec_timer = setTimeout(function() {//acts as trial timer
+							plugin.trial(display_element, block, trial, part + 1);
+							$(document).unbind('keydown', resp_func2);
+							rtd=999;
+							resp_d=999;//
+							}, 5000);
 				break;
 				case 12:
 					$('.face-study-stimulus').remove();//set time out function for the blank screen then block.next();
