@@ -85,12 +85,11 @@
 	
 		function progress(i){//working on progress indicator for first load, need to remove after each for loop...
 			var my_string = "step "+ i + " out of 34 complete";
-			$('jspsych_target').html('Please wait a moment while the experiment materials are prepared');			
+			$('.jspsych_target').html('Please wait a moment while the experiment materials are prepared');			
 			$( ".jspsych_target" ).append(my_string);
 		};
 		
 		function done(){
-			$('jspsych_target').html('');
 			$('jspsych_target').html('Thank you for your patience. All test materials have been loaded.');
 			setTimeout(function() {
 				$('jspsych_target').html('')
