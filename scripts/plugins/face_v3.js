@@ -81,7 +81,7 @@
 				break;
 				case 3://show the face
 					display_element.append($('<img>', {
-						src: trial.img,
+						src: trial.imgCD,
 						"class": 'face-study-stimulus'
 					}));			
 					setTimeout(function() {
@@ -266,7 +266,7 @@
 								"trial_index": block.trial_idx,
 								"rt_cat": rtc,
 								"rt_dec":rtd,
-								"stimulus": trial.img,
+								"stimulus": trial.imgCD,
 								"cat.resp":resp_c,
 								"dec.resp":resp_d,
 								"part":part

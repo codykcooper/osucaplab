@@ -95,7 +95,7 @@
 				$('jspsych_target').html('')
 			}, 2000); 
 		};
-		jsPsych.preloadImages(face,,progress);
+		jsPsych.preloadImages(face);
 
 		// Generating Random Order for Stimuli
 		//Fisher-Yates Shuffle copied from bost.ocks.org/mike/shuffle
@@ -130,7 +130,7 @@
 		
         jsPsych.init({
             display_element: $('#jspsych_target'),
-            experiment_structure: [consent_block,instruction_block,CD_block,debrief_block],
+            experiment_structure: [instruction_block,CD_block,debrief_block],
             on_finish: function(data) {
                 $("#jspsych_target").append($('<pre>', {
                     html: jsPsych.dataAsCSV()
