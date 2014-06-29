@@ -7,7 +7,7 @@
         <!-- Load the jspsych library and plugins -->
         <script src="scripts/jspsych.js"></script>
         <script src="scripts/plugins/jspsych-text.js"></script>
-        <script src="scripts/plugins/face_v2.js"></script>
+        <script src="scripts/plugins/face_v3.js"></script>
 		<script src="scripts/plugins/jspsych-html.js"></script>
         <!-- Load the stylesheet -->
         <link href="experiment.css" type="text/css" rel="stylesheet"></link>
@@ -28,10 +28,6 @@
                 return false;
             }
         };
-		var consent_block = {
-				type:'html', 
-				pages: [{url: 'consent.html', cont_btn: "start", check_fn: check_consent}]
-				};
 	
   // Experiment parameters
 
@@ -54,11 +50,53 @@
 		// Load stimuli into array for later calling
 		var face = ["img/r1.BMP","img/r2.BMP","img/r3.BMP","img/r4.BMP","img/r5.BMP","img/r6.BMP","img/r7.BMP","img/r8.BMP","img/r9.BMP","img/r10.BMP","img/r11.BMP","img/r12.BMP","img/r13.BMP","img/r14.BMP","img/r15.BMP","img/r16.BMP","img/r17.BMP","img/n1.BMP","img/n2.BMP","img/n3.BMP","img/n4.BMP","img/n5.BMP","img/n6.BMP","img/n7.BMP","img/n8.BMP","img/n9.BMP","img/n10.BMP","img/n11.BMP","img/n12.BMP","img/n13.BMP","img/n14.BMP","img/n15.BMP","img/n16.BMP","img/n17.BMP"];//array of image locations
 		var face1 = ["img/face1.jpg","img/face2.jpg"];
+		// create a function that takes face and shuffles 6 times and creates 6 columns of randomly ordered face stimuli
 		var shape=["r","r","r","r","r","r","r","r","r","r","r","r","r","r","r","r","r","n","n","n","n","n","n","n","n","n","n","n","n","n","n","n","n","n"];//will be used for prob assignment
 		var face_nat = ["Adok", "Lork"];//group membership options
         var face_disp = ["friendly","hostile"];//disposition choices
 		
-		jsPsych.preloadImages(face);
+		//Randomize the stimuli for the experiment 1 block only!! (i.e., 1 CD 1 XD and 1 D)
+		function randomize_stimuli(array1){// function to randomize stimuli
+			var matrix = [];
+			for(var i=0; i<array1.length; i++) {// create matrix to store the stimuli for each condition
+				matrix[i] = new Array(3);
+					for(var j=0; j<3; j++)
+						matrix[i][j] = array1[i];
+			}
+			// Generating Random Order for Stimuli
+			//Fisher-Yates Shuffle copied from bost.ocks.org/mike/shuffle ***********(Academic paper)**************
+			for(var z=0;z<3;z++){
+				var m = array1.length, t, d;
+				// While there remain elements to shuffle…
+				while (m) {
+				// Pick a remaining element…
+				d = Math.floor(Math.random() * m--);
+				// And swap it with the current element.
+				t = matrix[m][z];
+				matrix[m][z] = matrix[d][z];
+				matrix[d][z] = t;
+				}				
+			}
+		return matrix;
+		}
+		
+		var stim_block1=randomize_stimuli(face);//uses the above function to create a 3x34 matrix containing a random order of stim for block 1
+		var stim_block2=randomize_stimuli(face);//same for block 2
+	
+		function progress(i){//working on progress indicator for first load, need to remove after each for loop...
+			var my_string = "step "+ i + " out of 34 complete";
+			$('jspsych_target').html('Please wait a moment while the experiment materials are prepared');			
+			$( ".jspsych_target" ).append(my_string);
+		};
+		
+		function done(){
+			$('jspsych_target').html('');
+			$('jspsych_target').html('Thank you for your patience. All test materials have been loaded.');
+			setTimeout(function() {
+				$('jspsych_target').html('')
+			}, 2000); 
+		};
+		jsPsych.preloadImages(face,done,progress);
 
 		// Generating Random Order for Stimuli
 		//Fisher-Yates Shuffle copied from bost.ocks.org/mike/shuffle
@@ -68,6 +106,10 @@
 
 		
 		// Define experiment blocks
+		var consent_block = {
+				type:'html', 
+				pages: [{url: 'consent.html', cont_btn: "start", check_fn: check_consent}]
+				};
 
         var instruction_block = {
                 type: "text",
@@ -77,7 +119,7 @@
 
 		var CD_block = {
                 type: "face-exp",
-                stimuli: face,
+                stimuli: stim_block1,
 				prompt1: '<p>Press "A" to categorize the face as an Adok. Press "L" to categorize the face as a Lork.</p>',
 				prompt2: '<p>Press "A" to act friendly towards the face you saw. Press "L" to act defensively to towards the face you saw.</p>'
             };

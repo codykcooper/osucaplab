@@ -1,4 +1,8 @@
 /**
+ * Face ERP Experiment for the OSU Caplab
+ * Code by Cody Cooper
+ *
+ * Based on work by:
  * Josh de Leeuw
  * November 2013
  * 
@@ -9,15 +13,18 @@
  * 
  */
 (function( $ ) {
+
 	jsPsych["face-exp"] = (function(){
 		var plugin = {};
 		plugin.create = function(params) {
-			var trials = new Array(34);
-			for(var i = 0; i < 12; i++)
+			var trials = new Array(6);
+			for(var i = 0; i < 6; i++)
 			{
 				trials[i] = {};
 				trials[i].type = "face-exp";
-				trials[i].img = params.stimuli[i];
+				trials[i].imgCD = params.stimuli[i][0];
+				trials[i].imgXD = params.stimuli[i][1];
+				trials[i].imgD  = params.stimuli[i][2];
                 trials[i].prompt1 = (typeof params.prompt1 === 'undefined') ? "Please specify a value for prompt1 in the block parameters" : params.prompt1;
 				trials[i].prompt2 = (typeof params.prompt2 === 'undefined') ? "Please specify a value for prompt2 in the block parameters" : params.prompt2;
 				trials[i].left_key = params.left_key || 65; // defaults to 'A'
@@ -30,35 +37,20 @@
                 // parameter, but if they don't it gracefully adds an empty object
                 // in it's place.
                 trials[i].data = (typeof params.data === 'undefined') ? {} : params.data[i];
-			}
+			}	
 			return trials;
 		};
+		
 		//Global Variables?
+		
 		//var tcomplete=false;
 		var rtc=-1;
 		var resp_c =-1;
 		var rtd=-1;
 		var resp_d =-1;
 		//Shuffle the images, hopefully... 
-		function shuffle(array) {
-			var m = array.length, t, i;
-			// While there remain elements to shuffle…
-			while (m) {
-			// Pick a remaining element…
-				i = Math.floor(Math.random() * m--);
-			// And swap it with the current element.
-				t = array[m];
-				array[m] = array[i];
-				array[i] = t;
-			}
-			return array;
-		}
-		var cd_face = shuffle(trial.trial.img);
-
 		
 		plugin.trial = function(display_element, block, trial, part) {
-			//image randomization
-			
 			switch (part){	
 				case 1://start trial with a fixation screen
 					rtc=999;
@@ -136,6 +128,7 @@
 						display_element.append($('<div>', {
                         "class": 'face-study-stimulus',
                         html: trial.prompt1
+						
                     }));
 						$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
 											'font-size' : '1em',
