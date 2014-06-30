@@ -91,11 +91,7 @@
 						src: trial.imgCD,
 						"class": 'face-study-stimulus'
 					}));
-					$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
-							width : '50%',
-							height: '100%',
-							position:'absolute'
-						});					
+				
 					setTimeout(function() {
 						plugin.trial(display_element, block, trial, part+1);
 						}, 2000);
