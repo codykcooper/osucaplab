@@ -90,7 +90,12 @@
 					display_element.append($('<img>', {
 						src: trial.imgCD,
 						"class": 'face-study-stimulus'
-					}));			
+					}));
+					$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
+							width : '50%',
+							height: '100%',
+							position:'absolute'
+						});					
 					setTimeout(function() {
 						plugin.trial(display_element, block, trial, part+1);
 						}, 2000);
@@ -110,7 +115,7 @@
                         html: trial.fixation
                     }));
 					$('.face-study-stimulus').css({
-											'font-size' : '75px',
+											'font-size' : '3em',
 											top :'40%',
 											left:'50%',
 											position:'fixed'
@@ -140,7 +145,7 @@
 						$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
 											'font-size' : '1em',
 											top : '40%',
-											left: '35%',
+											left: '30%',
 											'text-align':'center',
 											position:'fixed'
 											});
@@ -196,7 +201,7 @@
                         html: trial.fixation
                     }));
 					$('.face-study-stimulus').css({
-											'font-size' : '75px',
+											'font-size' : '3em',
 											top : '40%',
 											left:'50%',
 											position:'fixed'
@@ -225,7 +230,7 @@
 						$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
 												'font-size' : '1em',
 												top : '40%',
-												left: '35%',
+												left: '25%',
 												'text-align':'center',
 												position:'fixed'
 											});
