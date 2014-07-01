@@ -166,17 +166,17 @@
 		function progress(i){//needs work
 			var my_string = "step "+ i + " out of 34 complete";
 			$(".jsypsych_target").remove();
-			$( ".jspsych_target" ).append("Please wait a moment while the experiment materials are prepared<br>"+ my_string);
+			$( ".jspsych_target" ).write("Please wait a moment while the experiment materials are prepared<br>"+ my_string);
 		};
 		
-		/*function done(){//needs work
+		function done(){//needs work
 			$('jspsych_target').html('Thank you for your patience. All test materials have been loaded.');
 			setTimeout(function() {
 				$('jspsych_target').html('')
 			}, 2000); 
-		};*/
+		};
 		
-		jsPsych.preloadImages(face.concat(fb),"",progress);//preload images to browser for better runtime during experiment
+		jsPsych.preloadImages(face.concat(fb),done,progress);//preload images to browser for better runtime during experiment
 		// Define experiment blocks
 		var consent_block = {
 				type:'html', 
