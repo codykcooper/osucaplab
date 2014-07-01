@@ -164,15 +164,15 @@
 		var attributes_block2 = setAttribtues(stim_block2);
 		
 		function progress(i){//needs work
-			var my_string = "step "+ i + " out of 34 complete";
-			$(".jsypsych_target").remove();
-			$( ".jspsych_target" ).write("Please wait a moment while the experiment materials are prepared<br>"+ my_string);
-		};
+			//var div = document.getElementById("jspsych_target").innerHTML; 
+			$('#jspsych_target').html(' ');
+			$('#jspsych_target').html('Please wait while the experiment materials are prepared.<br>'+'step '+i+' out of 50 completed.');
+			}
 		
 		function done(){//needs work
-			$('jspsych_target').html('Thank you for your patience. All test materials have been loaded.');
+			$('#jspsych_target').html('Thank you for your patience. All test materials have been loaded.');
 			setTimeout(function() {
-				$('jspsych_target').html('')
+				$('#jspsych_target').html('')
 			}, 2000); 
 		};
 		
