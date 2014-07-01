@@ -16,30 +16,36 @@
 	jsPsych["face-exp"] = (function(){
 		var plugin = {};
 		plugin.create = function(params) {
-			var trials = new Array(34);
-			for(var i = 0; i < 34; i++)
+			var trials = new Array(params.stimuli.length);
+			for(var i = 0; i < params.stimuli.length; i++)
 			{
 				trials[i] = {};
 				trials[i].type = "face-exp";
-				trials[i].imgCD = params.stimuli[i][0];
-				trials[i].shapeCD = params.attributes[i][0];
+				trials[i].img = params.stimuli[i][0];
+				trials[i].shape = params.attributes[i][0];
+				trials[i].trialtype=params.attributes[i][3];//Alpha: CD XD or D
+				trials[i].group=params.attributes[i][1];//Alpha of Adok or Lork
 				if(params.attributes[i][1]== "Adok"){
-					trials[i].natCD  = 65;
+					trials[i].nat  = 65;
                 } 
 				else if(params.attributes[i][1]== "Lork"){
-					trials[i].natCD  = 76;
+					trials[i].nat  = 76;
 				}
 				if(params.attributes[i][2]== "Fr"){
-					trials[i].dispCD  = 65;
+					trials[i].disp  = 65;
                 } 
 				else if(params.attributes[i][2]== "Ag"){
-					trials[i].dispCD  = 76;
+					trials[i].disp  = 76;
 				}
                 trials[i].prompt1 = (typeof params.prompt1 === 'undefined') ? "Please specify a value for prompt1 in the block parameters" : params.prompt1;
 				trials[i].prompt2 = (typeof params.prompt2 === 'undefined') ? "Please specify a value for prompt2 in the block parameters" : params.prompt2;
+				trials[i].prompt3 = (typeof params.prompt3 === 'undefined') ? "Please specify a value for prompt3 in the block parameters" : params.prompt3;
+				trials[i].rest = (typeof params.rest === 'undefined') ? 'Please take a moment to take a short break. Press enter when you are ready to continue.': params.rest;
 				trials[i].left_key = params.left_key || 65; // defaults to the 'A' key
                 trials[i].right_key = params.right_key || 76; // defaults to the 'L' key
 				trials[i].fixation= (typeof params.fixation === 'undefined') ? "+" : params.fixation;
+				
+				
                 
                 // supporting the generic data object with the following line
                 // is always a good idea. it allows people to pass in the data
@@ -54,7 +60,7 @@
 		var resp_c =-1;
 		var rtd=-1;
 		var resp_d =-1;
-		
+		var n = 1;
 		plugin.trial = function(display_element, block, trial, part) {
 		
 			switch (part){	
@@ -85,10 +91,10 @@
 						plugin.trial(display_element, block, trial, part + 1);
 					}, 250);
 				break;
-				//show the face
+//********************************************show the face******************************************************************
 				case 3:
 					display_element.append($('<img>', {
-						src: trial.imgCD,
+						src: trial.img,
 						"class": 'face-study-stimulus'
 					}));
 					$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
@@ -136,57 +142,86 @@
 				break;				
 //************************************* Show Categorization Question ****************************************************************
 				case 7:
-					// show prompt1
-					if (trial.prompt1 !== "") {
-						display_element.append($('<div>', {
-                        "class": 'face-study-stimulus',
-                        html: trial.prompt1
-						
-                    }));
-						$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
-												'font-size' : '1em',
-												top : '40%',
-												left: '28%',
-												'text-align':'center',
-												position:'fixed'
-											});
+					if(trial.trialtype=='CD'){
+						// show prompt1 for CD
+						if (trial.prompt1 !== "") {
+							display_element.append($('<div>', {
+							"class": 'face-study-stimulus',
+							html: trial.prompt1
+							
+						}));
+							$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
+													'font-size' : '1em',
+													top : '40%',
+													left: '28%',
+													'text-align':'center',
+													position:'fixed'
+												});
+						}
+
+						// start measuring response time
+						var startTime = (new Date()).getTime();
+
+						// create the function that triggers when a key is pressed.
+						var flag1 = false; // true when a valid key is chosen
+						var resp_func1 = function(e1) {
+							//var correct1 = false; // true when the correct response is chosen
+							if (e1.which == trial.left_key) // 'q' key by default
+							{
+								flag1 = true;//can use this for feedback set a correct == to the assignment
+								resp_c=e1.which;
+							}
+							else if (e1.which == trial.right_key) // 'p' key by default
+							{
+								flag1 = true;
+								resp_c=e1.which;
+							}
+							
+							if (flag1) {
+								var endTime = (new Date()).getTime();
+								rtc = (endTime - startTime);
+								clearTimeout(cat_timer);//cancel the timeout event at the end of this case
+								$(document).unbind('keydown', resp_func1); // remove response function from keys
+								plugin.trial(display_element, block, trial, part + 1);							
+							}
+						};
+							$(document).keydown(resp_func1);
+							cat_timer = setTimeout(function() {//acts as trial timer
+								$(document).unbind('keydown', resp_func1);
+								rtc=999;
+								resp_c=999;//
+								plugin.trial(display_element, block, trial, part + 1);
+							}, 5000);
+							
 					}
+					else if(trial.trialtype=='XD'){//XD**************************************************************************************************************************************
+						// show prompt3 for XD
+						if (trial.prompt3 !== "") {
+							display_element.append($('<div>', {
+							"class": 'face-study-stimulus',
+							html: trial.prompt3 + trial.group + "."
+						}));
+							$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
+													'font-size' : '1em',
+													top : '40%',
+													left: '28%',
+													'text-align':'center',
+													position:'fixed'
+												});
+						}
 
-					// start measuring response time
-					var startTime = (new Date()).getTime();
-
-					// create the function that triggers when a key is pressed.
-					var flag1 = false; // true when a valid key is chosen
-					var resp_func1 = function(e1) {
-						//var correct1 = false; // true when the correct response is chosen
-						if (e1.which == trial.left_key) // 'q' key by default
-						{
-							flag1 = true;//can use this for feedback set a correct == to the assignment
-							resp_c=e1.which;
-						}
-						else if (e1.which == trial.right_key) // 'p' key by default
-						{
-							flag1 = true;
-							resp_c=e1.which;
-						}
-						
-						if (flag1) {
-							var endTime = (new Date()).getTime();
-							rtc = (endTime - startTime);
-							clearTimeout(cat_timer);//cancel the timeout event at the end of this case
-							$(document).unbind('keydown', resp_func1); // remove response function from keys
-							plugin.trial(display_element, block, trial, part + 1);							
-						}
-					};
-						$(document).keydown(resp_func1);
-						cat_timer = setTimeout(function() {//acts as trial timer
-							plugin.trial(display_element, block, trial, part + 1);
-							$(document).unbind('keydown', resp_func1);
-							rtc=999;
-							resp_c=999;//
-						}, 5000);
-						
-					break;
+						// start measuring response time
+						var startTime = (new Date()).getTime();
+							setTimeout(function() {//acts as trial timer
+								rtc=999;
+								resp_c=startTime-((new Date()).getTime());//
+								plugin.trial(display_element, block, trial, part + 1);
+							}, 5000);	
+					}
+					else if(trial.trialtype=='D'){// D only
+					plugin.trial(display_element, block, trial, part + 4); // skip to decision question
+					}
+				break;
 //*******************************************************************************************************************************
 				case 8://remove prompt1 
 					$('.face-study-stimulus').remove();
@@ -306,8 +341,9 @@
 					}, 250);
 				break;
 //************************************************** Show Feedback ****************************************************************
-				case 15 ://show feedback; for cd there are 16 possibilities!!
-					if(resp_c==trial.natCD && resp_d==trial.dispCD){	//four correct screens
+				case 15 ://show feedback; a lot of simple if else statements
+					if(trial.trialtype=='CD'){	
+					if(resp_c==trial.nat && resp_d==trial.disp){	
 						if(resp_c==65 && resp_d==65){
 							display_element.append($('<img>', {
 								src: "img/AcFc.BMP",
@@ -316,20 +352,20 @@
 						} 
 						else if(resp_c==65 && resp_d==76){
 							display_element.append($('<img>', {
-									src: "img/AcDc.BMP",
-									"class": 'face-study-stimulus'
+								src: "img/AcDc.BMP",
+								"class": 'face-study-stimulus'
 							}));
 						} 
 						else if(resp_c==76 && resp_d==65){
 							display_element.append($('<img>', {
-									src: "img/LcFc.BMP",
-									"class": 'face-study-stimulus'
+								src: "img/LcFc.BMP",
+								"class": 'face-study-stimulus'
 							}));
 						} 
 						else if(resp_c==76 && resp_d==76){
 							display_element.append($('<img>', {
-									src: "img/LcDc.BMP",
-									"class": 'face-study-stimulus'
+								src: "img/LcDc.BMP",
+								"class": 'face-study-stimulus'
 							}));
 						}
 					}
@@ -342,20 +378,20 @@
 						} 
 						else if(resp_c==65 && resp_d==76){
 							display_element.append($('<img>', {
-									src: "img/AwDc.BMP",
-									"class": 'face-study-stimulus'
+								src: "img/AwDc.BMP",
+								"class": 'face-study-stimulus'
 							}));
 						} 
 						else if(resp_c==76 && resp_d==65){
 							display_element.append($('<img>', {
-									src: "img/LwFc.BMP",
-									"class": 'face-study-stimulus'
+								src: "img/LwFc.BMP",
+								"class": 'face-study-stimulus'
 							}));
 						} 
 						else if(resp_c==76 && resp_d==76){
 							display_element.append($('<img>', {
-									src: "img/LwDc.BMP",
-									"class": 'face-study-stimulus'
+								src: "img/LwDc.BMP",
+								"class": 'face-study-stimulus'
 							}));
 						}
 					}
@@ -368,83 +404,181 @@
 						} 
 						else if(resp_c==65 && resp_d==76){
 							display_element.append($('<img>', {
-									src: "img/AcDw.BMP",
-									"class": 'face-study-stimulus'
+								src: "img/AcDw.BMP",
+								"class": 'face-study-stimulus'
 							}));
 						} 
 						else if(resp_c==76 && resp_d==65){
 							display_element.append($('<img>', {
-									src: "img/LcFw.BMP",
-									"class": 'face-study-stimulus'
+								src: "img/LcFw.BMP",
+								"class": 'face-study-stimulus'
 							}));
 						} 
 						else if(resp_c==76 && resp_d==76){
 							display_element.append($('<img>', {
-									src: "img/LcDw.BMP",
-									"class": 'face-study-stimulus'
+								src: "img/LcDw.BMP",
+								"class": 'face-study-stimulus'
 							}));
 						}
 					}
 					else if(resp_c!=trial.natCD && resp_d!=trial.dispCD){//incorrect decision and categorization***********************
 						if(resp_c==65 && resp_d==65){
 							display_element.append($('<img>', {
-								src: "img/AwFw.BMP",
-								"class": 'face-study-stimulus'
+							src: "img/AwFw.BMP",
+							"class": 'face-study-stimulus'
 							}));
 						} 
 						else if(resp_c==65 && resp_d==76){
 							display_element.append($('<img>', {
-									src: "img/AwDw.BMP",
-									"class": 'face-study-stimulus'
+								src: "img/AwDw.BMP",
+								"class": 'face-study-stimulus'
 							}));
 						} 
 						else if(resp_c==76 && resp_d==65){
 							display_element.append($('<img>', {
-									src: "img/LwFw.BMP",
-									"class": 'face-study-stimulus'
+								src: "img/LwFw.BMP",
+								"class": 'face-study-stimulus'
 							}));
 						} 
 						else if(resp_c==76 && resp_d==76){
 							display_element.append($('<img>', {
-									src: "img/LwDw.BMP",
-									"class": 'face-study-stimulus'
+								src: "img/LwDw.BMP",
+								"class": 'face-study-stimulus'
 							}));
 						}
-						else if (resp_c==999 or resp_d==999){
+						else if(resp_c==999 || resp_d==999){
 							display_element.append($('<img>', {
-									src: "img/sorry.BMP",
-									"class": 'face-study-stimulus'
+								src: "img/sorry.BMP",
+								"class": 'face-study-stimulus'
 							}));
 						}
 					}
-					$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
-						width:'auto',
-						height:'100%',
-						left:'22%',
-						top:'0%',
-						position:'fixed'
-					});					
-					setTimeout(function() {
-						plugin.trial(display_element, block, trial, part+1);
-						}, 4000);
+				}
+				else if(trial.trialtype=='XD'||trial.trialtype=='D'){
+					if(trial.nat==65/*adok*/ && resp_d==trial.dispCD/*correct answer*/ && resp_d==65/*friendly*/){
+						display_element.append($('<img>', {
+							src: "img/AFc.BMP",
+							"class": 'face-study-stimulus'
+						}));
+					
+					}
+					else if(trial.nat==65/*adok*/ && resp_d==trial.dispCD/*correct answer*/ && resp_d==76/*Defensive*/){
+						display_element.append($('<img>', {
+							src: "img/ADc.BMP",
+							"class": 'face-study-stimulus'
+						}));
+					
+					}
+					else if(trial.nat==76/*lork*/ && resp_d==trial.dispCD/*correct answer*/ && resp_d==65/*friendly*/){
+						display_element.append($('<img>', {
+							src: "img/LFc.BMP",
+							"class": 'face-study-stimulus'
+						}));
+					
+					}
+					else if(trial.nat==76/*lork*/ && resp_d==trial.dispCD/*correct answer*/ && resp_d==76/*Defensive*/){
+						display_element.append($('<img>', {
+							src: "img/LDc.BMP",
+							"class": 'face-study-stimulus'
+						}));
+					
+					}
+//******************************************************************************************************************************************
+					else if(trial.nat==65/*adok*/ && resp_d!=trial.dispCD/*incorrect answer*/ && resp_d==65/*friendly*/){
+						display_element.append($('<img>', {
+							src: "img/AFw.BMP",
+							"class": 'face-study-stimulus'
+						}));
+					
+					}
+					else if(trial.nat==65/*adok*/ && resp_d!=trial.dispCD/*incorrect answer*/ && resp_d==76/*Defensive*/){
+						display_element.append($('<img>', {
+							src: "img/ADw.BMP",
+							"class": 'face-study-stimulus'
+						}));
+					
+					}
+					else if(trial.nat==76/*lork*/ && resp_d!=trial.dispCD/*incorrect answer*/ && resp_d==65/*friendly*/){
+						display_element.append($('<img>', {
+							src: "img/LFw.BMP",
+							"class": 'face-study-stimulus'
+						}));
+					
+					}
+					else if(trial.nat==76/*lork*/ && resp_d!=trial.dispCD/*incorrect answer*/ && resp_d==76/*Defensive*/){
+						display_element.append($('<img>', {
+							src: "img/LDw.BMP",
+							"class": 'face-study-stimulus'
+						}));
+					
+					}
+				
+				}
+				$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
+					width:'auto',
+					height:'100%',
+					left:'22%',
+					top:'0%',
+					position:'fixed'
+				});					
+				setTimeout(function() {
+					plugin.trial(display_element, block, trial, part+1);
+					}, 4000);
 				break;
-//****************************************Remove Feedback and write trial data*****************************************************************************************
+//********************************** take a break *************************************************************************************
 				case 16:
+					if(n==34){//after 34 cd trials take a break
+					$('.face-study-stimulus').remove();
+					var start_break=(new Date()).getTime();
+					//display the break
+							display_element.append($('<div>', {
+								"class": 'face-study-stimulus',
+								html: trial.rest
+							}));
+							$('.face-study-stimulus').css({
+								'font-size' : '1em',
+								top :'40%',
+								left:'50%',
+								position:'fixed'
+							});
+						var resp_func3 = function(e3) {
+							var flag3 = false; // true when a valid key is chosen
+							//var correct2 = false; // true when the correct response is chosen
+							if (e3.which == 13){ // if they hit enter
+								flag3=true;
+							}
+							if(flag3){
+								var endTime3 = (new Date()).getTime();
+								rtbreak = (endTime3 - start_break);
+								$(document).unbind('keydown', resp_func3); // remove response function from keys
+								plugin.trial(display_element, block, trial, part + 1);
+								//tcomplete = true;
+							}
+						};
+						$(document).keydown(resp_func3);
+					}
+					else{
+					plugin.trial(display_element, block, trial, part + 1);
+					}
+				break;
+				
+//****************************************Remove Feedback and write trial data*****************************************************************************************
+				case 17:
 					$('.face-study-stimulus').remove();//set time out function for the blank screen then block.next();
 					var trial_data = {
 								"trial_type": "face-exp",
 								trial_index: block.trial_idx,
 								"rt_cat": rtc,
 								"rt_dec":rtd,
-								"stimulus": trial.imgCD,
+								"stimulus": trial.img,
 								"cat.resp":resp_c,
-								"cat.Assign":trial.natCD,
+								"cat.Assign":trial.nat,
 								"dec.resp":resp_d,
-								"disp.Assign":trial.dispCD,
-								"face_shape":trial.shapeCD
+								"disp.Assign":trial.disp,
+								"face_shape":trial.shape
 							};
 							block.writeData($.extend({}, trial_data, trial.data));
-					setTimeout(function() {block.next();}, 1000);
+					setTimeout(function() {n+=1;block.next();}, 1000);
             }// End switch function
         };
         return plugin;

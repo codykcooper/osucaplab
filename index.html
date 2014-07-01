@@ -7,7 +7,7 @@
         <!-- Load the jspsych library and plugins -->
         <script src="scripts/jspsych.js"></script>
         <script src="scripts/plugins/jspsych-text.js"></script>
-        <script src="scripts/plugins/face_v4.js"></script>
+        <script src="scripts/plugins/face_v5.js"></script>
 		<script src="scripts/plugins/jspsych-html.js"></script>
         <!-- Load the stylesheet -->
         <link href="experiment.css" type="text/css" rel="stylesheet"></link>
@@ -49,7 +49,7 @@
 		// Load stimuli into array for later calling
 		var face = ["img/r1.BMP","img/r2.BMP","img/r3.BMP","img/r4.BMP","img/r5.BMP","img/r6.BMP","img/r7.BMP","img/r8.BMP","img/r9.BMP","img/r10.BMP","img/r11.BMP","img/r12.BMP","img/r13.BMP","img/r14.BMP","img/r15.BMP","img/r16.BMP","img/r17.BMP","img/n1.BMP","img/n2.BMP","img/n3.BMP","img/n4.BMP","img/n5.BMP","img/n6.BMP","img/n7.BMP","img/n8.BMP","img/n9.BMP","img/n10.BMP","img/n11.BMP","img/n12.BMP","img/n13.BMP","img/n14.BMP","img/n15.BMP","img/n16.BMP","img/n17.BMP"];//array of image locations
 		// create a function that takes face and shuffles 6 times and creates 6 columns of randomly ordered face stimuli
-		var fb =["img/AcDc.BMP", "img/AcFc.BMP", "img/AcDc.BMP", "img/LcFc.BMP", "img/AwDc.BMP", "img/AwFc.BMP", "img/LwDc.BMP", "img/LwDc.BMP","img/AcDw.BMP", "img/AcFw.BMP", "img/LcDw.BMP", "img/LcDw.BMP", "img/AwDw.BMP", "img/AwFw.BMP", "img/LwDw.BMP", "img/LwDw.BMP"];
+		var fb =["img/sorry.BMP","img/AcDc.BMP", "img/AcFc.BMP", "img/AcDc.BMP", "img/LcFc.BMP", "img/AwDc.BMP", "img/AwFc.BMP", "img/LwDc.BMP", "img/LwDc.BMP","img/AcDw.BMP", "img/AcFw.BMP", "img/LcDw.BMP", "img/LcDw.BMP", "img/AwDw.BMP", "img/AwFw.BMP", "img/LwDw.BMP", "img/LwDw.BMP"];
 		
 		//Randomize the stimuli for the experiment 1 block only!! (i.e., 1 CD 1 XD and 1 D)
 		function randomize_stimuli(array1){// function to randomize stimuli
@@ -96,65 +96,84 @@
 		*/
 			var matrix = [];
 			var prob = 0;
-			var col = 0;
+			var xd = 0;
+			var d = 0;
+			var n = 0;
 			var prob_nat = 6;//change probability of nat assignment, currently 60% chance of R being Adok, and 60% chance of Narrow being lork
 			var prob_disp = 7;// change disp assignment. Currently 70% chance of Adok being Fr and 70% chance of lork being Aggressive
-			for(var z=0; z<stimuli.length; z++) {// create matrix to store the stimuli for each condition
-					matrix[z] = new Array(9);
+			for(var z=0; z<102; z++) {// create matrix to store the stimuli for each condition
+					matrix[z] = new Array(4);
 				}
 			for(j=0;j<3;j++){ 
 				for(var i=0; i<stimuli.length; i++) {
 					//number of columns in stim array (can write function to make dynamic)
 					if(stimuli[i][j].charAt(4)=="r"){//If stimuli is a round face
-						matrix[i][0+col]="round";
+						matrix[n][0]="round";
+						if(n<34){matrix[n][3]='CD';}
+						else if(n>=34){
+							if(xd<34 && d<34){matrix[n][3]=Math.floor(Math.random() * ((3-2)+1) + 2);}// randomly either 2 or 3 This may not be the best way to randomize
+								if(matrix[n][3]==2){matrix[n][3]='XD';xd+=1;}//Change random number to trial indicator
+								else if(matrix[n][3]==3){matrix[n][3]='D';d+=1;}
+							else if(xd>=34){matrix[n][3]='D';}
+							else if(d>=34){matrix[n][3]='XD';}
+						}
 						prob = Math.floor((Math.random() * 10) + 1);//random number between 1 and 10
 						if(prob<=prob_nat){
-							matrix[i][1+col]="Adok";
+							matrix[n][1]="Adok";
 							prob = Math.floor((Math.random() * 10) + 1);
 							if(prob<=prob_disp){//assign disposition
-								matrix[i][2+col]="Fr";
+								matrix[n][2]="Fr";
 							}else if (prob>prob_disp){//basically 1-prob_adok_friendly
-								matrix[i][2+col]="Ag";
+								matrix[n][2]="Ag";
 							}
 						}
 						else if(prob>prob_nat){
-							matrix[i][1+col]="Lork";
+							matrix[n][1]="Lork";
 							prob = Math.floor((Math.random() * 10) + 1);
 							if(prob<=prob_disp){//assign disposition
-								matrix[i][2+col]="Ag";
+								matrix[n][2]="Ag";
 							}else if (prob>prob_disp){
-								matrix[i][2+col]="Fr";
+								matrix[n][2]="Fr";
 							}	
 						}
 					}
-					if(stimuli[i][j].charAt(4)=="n"){//if stimuli is a narrow face
-						matrix[i][0+col]="narrow";
+					else if(stimuli[i][j].charAt(4)=="n"){//if stimuli is a narrow face
+						matrix[n][0]="narrow";
+						if(n<34){matrix[n][3]='CD';}
+						else if(n>=34){
+							if(xd<34 && d<34){matrix[n][3]=Math.floor(Math.random() * ((3-2)+1) + 2);}// randomly either 2 or 3
+								if(matrix[n][3]==2){matrix[n][3]='XD';xd+=1;}
+								else if(matrix[n][3]==3){matrix[n][3]='D';d+=1;}
+							else if(xd>=34){matrix[n][3]='D';}
+							else if(d>=34){matrix[n][3]='XD';}
+						}
 						prob = Math.floor((Math.random()*10)+1);
 						if (prob<=prob_nat){
-							matrix[i][1+col]="Lork";
+							matrix[n][1]="Lork";
 							prob = Math.floor((Math.random() * 10) + 1);
 							if(prob<=prob_disp){
-								matrix[i][2+col]="Ag";
+								matrix[n][2]="Ag";
 							}else if(prob>prob_disp){
-								matrix[i][2+col]= "Fr";
+								matrix[n][2]= "Fr";
 							}
 						} else if (prob>prob_nat){
-							matrix[i][1+col]="Adok";
+							matrix[n][1]="Adok";
 							prob = Math.floor((Math.random() * 10) + 1);
 							if(prob<=prob_disp){
-								matrix[i][2+col]="Fr";
+								matrix[n][2]="Fr";
 							}else if(prob>prob_disp){
-								matrix[i][2+col]= "Ag";
+								matrix[n][2]= "Ag";
 							}
 						}
 					}
+				matrix[n][4]=stimuli[i][j];
+				n+=1;
 				}
-				col+=3;
 			}
 		return matrix;
 		}//close the function
 		
-		var attributes_block1 = setAttribtues(stim_block1);
+		var attributes_block1 = setAttribtues(stim_block1);//can incorporate the randomize function if I have time
 		var attributes_block2 = setAttribtues(stim_block2);
 		
 		function progress(i){//needs work
@@ -164,9 +183,6 @@
 		
 		function done(){//needs work
 			$('#jspsych_target').html('Thank you for your patience. All test materials have been loaded.<br> Please press enter to continue.');
-			setTimeout(function(){
-			//$('#spsych_target').remove();
-			},2000);
 		};
 		
 		jsPsych.preloadImages(face.concat(fb),done,progress);//preload images to browser for better runtime during experiment
@@ -192,6 +208,7 @@
                 stimuli: stim_block1,
 				prompt1: '<p>Press "A" to categorize the face as an Adok. Press "L" to categorize the face as a Lork.</p>',
 				prompt2: '<p>Press "A" to act friendly towards the face you saw. Press "L" to act defensively to towards the face you saw.</p>',
+				prompt3: '<p>The Face you just saw was a </p>',		//the script will add whether it was a lork or adok
 				attributes:attributes_block1
             };
 
@@ -202,7 +219,7 @@
 		
         jsPsych.init({
             display_element: $('#jspsych_target'),
-            experiment_structure: [prep,consent_block,instruction_block,CD_block,debrief_block],
+            experiment_structure: [prep,instruction_block,CD_block,debrief_block],
             on_finish: function(data) {
                 $("#jspsych_target").append($('<pre>', {
                     html: jsPsych.dataAsCSV()

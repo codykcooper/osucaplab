@@ -16,36 +16,39 @@
 	jsPsych["face-exp"] = (function(){
 		var plugin = {};
 		plugin.create = function(params) {
-			var trials = new Array(34);
-			for(var i = 0; i < 34; i++)
+			var trials = new Array(params.stimuli.length);
+			for(var i = 34; i < params.stimuli.length; i++)
 			{
-				trials[i] = {};
-				trials[i].type = "face-exp";
-				trials[i].imgCD = params.stimuli[i][0];
-				trials[i].shapeCD = params.attributes[i][0];
+				trials[i-34] = {};
+				trials[i-34].type = "face-exp";
+				trials[i-34].imgCD = params.stimuli[i][0];
+				trials[i-34].shapeCD = params.attributes[i][0];
+				trials[i-34].trialtype=params.attributes[i][3];//Alpha: CD XD or D
+				trials[i-34].group=params.attributes[i][1];//Alpha of Adok or Lork
 				if(params.attributes[i][1]== "Adok"){
-					trials[i].natCD  = 65;
+					trials[i-34].natCD  = 65;
                 } 
 				else if(params.attributes[i][1]== "Lork"){
-					trials[i].natCD  = 76;
+					trials[i-34].natCD  = 76;
 				}
 				if(params.attributes[i][2]== "Fr"){
-					trials[i].dispCD  = 65;
+					trials[i-34].dispCD  = 65;
                 } 
 				else if(params.attributes[i][2]== "Ag"){
-					trials[i].dispCD  = 76;
+					trials[i-34].dispCD  = 76;
 				}
-                trials[i].prompt1 = (typeof params.prompt1 === 'undefined') ? "Please specify a value for prompt1 in the block parameters" : params.prompt1;
-				trials[i].prompt2 = (typeof params.prompt2 === 'undefined') ? "Please specify a value for prompt2 in the block parameters" : params.prompt2;
-				trials[i].left_key = params.left_key || 65; // defaults to the 'A' key
-                trials[i].right_key = params.right_key || 76; // defaults to the 'L' key
-				trials[i].fixation= (typeof params.fixation === 'undefined') ? "+" : params.fixation;
+                trials[i-34].prompt1 = (typeof params.prompt1 === 'undefined') ? "Please specify a value for prompt1 in the block parameters" : params.prompt1;
+				trials[i-34].prompt2 = (typeof params.prompt2 === 'undefined') ? "Please specify a value for prompt2 in the block parameters" : params.prompt2;
+				trials[i-34].prompt3 = (typeof params.prompt3 === 'undefined') ? "Please specify a value for prompt3 in the block parameters" : params.prompt3;
+				trials[i-34].left_key = params.left_key || 65; // defaults to the 'A' key
+                trials[i-34].right_key = params.right_key || 76; // defaults to the 'L' key
+				trials[i-34].fixation= (typeof params.fixation === 'undefined') ? "+" : params.fixation;
                 
                 // supporting the generic data object with the following line
                 // is always a good idea. it allows people to pass in the data
                 // parameter, but if they don't it gracefully adds an empty object
                 // in it's place.
-                trials[i].data = (typeof params.data === 'undefined') ? {} : params.data[i];
+                trials[i-34].data = (typeof params.data === 'undefined') ? {} : params.data[i];
 			}	
 			return trials;
 		};
@@ -136,57 +139,87 @@
 				break;				
 //************************************* Show Categorization Question ****************************************************************
 				case 7:
-					// show prompt1
-					if (trial.prompt1 !== "") {
-						display_element.append($('<div>', {
-                        "class": 'face-study-stimulus',
-                        html: trial.prompt1
-						
-                    }));
-						$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
-												'font-size' : '1em',
-												top : '40%',
-												left: '28%',
-												'text-align':'center',
-												position:'fixed'
-											});
+					if(trial.trialtype=='CD'){
+						// show prompt1 for CD
+						if (trial.prompt1 !== "") {
+							display_element.append($('<div>', {
+							"class": 'face-study-stimulus',
+							html: trial.prompt1
+							
+						}));
+							$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
+													'font-size' : '1em',
+													top : '40%',
+													left: '28%',
+													'text-align':'center',
+													position:'fixed'
+												});
+						}
+
+						// start measuring response time
+						var startTime = (new Date()).getTime();
+
+						// create the function that triggers when a key is pressed.
+						var flag1 = false; // true when a valid key is chosen
+						var resp_func1 = function(e1) {
+							//var correct1 = false; // true when the correct response is chosen
+							if (e1.which == trial.left_key) // 'q' key by default
+							{
+								flag1 = true;//can use this for feedback set a correct == to the assignment
+								resp_c=e1.which;
+							}
+							else if (e1.which == trial.right_key) // 'p' key by default
+							{
+								flag1 = true;
+								resp_c=e1.which;
+							}
+							
+							if (flag1) {
+								var endTime = (new Date()).getTime();
+								rtc = (endTime - startTime);
+								clearTimeout(cat_timer);//cancel the timeout event at the end of this case
+								$(document).unbind('keydown', resp_func1); // remove response function from keys
+								plugin.trial(display_element, block, trial, part + 1);							
+							}
+						};
+							$(document).keydown(resp_func1);
+							cat_timer = setTimeout(function() {//acts as trial timer
+								$(document).unbind('keydown', resp_func1);
+								rtc=999;
+								resp_c=999;//
+								plugin.trial(display_element, block, trial, part + 1);
+							}, 5000);
+							
 					}
+					else if(trial.trialtype=='XD'){//XD**************************************************************************************************************************************
+						// show prompt3 for XD
+						if (trial.prompt3 !== "") {
+							display_element.append($('<div>', {
+							"class": 'face-study-stimulus',
+							html: trial.prompt3 + trial.group + "."
+						}));
+							$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
+													'font-size' : '1em',
+													top : '40%',
+													left: '35%',
+													'text-align':'center',
+													position:'fixed'
+												});
+						}
 
-					// start measuring response time
-					var startTime = (new Date()).getTime();
-
-					// create the function that triggers when a key is pressed.
-					var flag1 = false; // true when a valid key is chosen
-					var resp_func1 = function(e1) {
-						//var correct1 = false; // true when the correct response is chosen
-						if (e1.which == trial.left_key) // 'q' key by default
-						{
-							flag1 = true;//can use this for feedback set a correct == to the assignment
-							resp_c=e1.which;
-						}
-						else if (e1.which == trial.right_key) // 'p' key by default
-						{
-							flag1 = true;
-							resp_c=e1.which;
-						}
-						
-						if (flag1) {
-							var endTime = (new Date()).getTime();
-							rtc = (endTime - startTime);
-							clearTimeout(cat_timer);//cancel the timeout event at the end of this case
-							$(document).unbind('keydown', resp_func1); // remove response function from keys
-							plugin.trial(display_element, block, trial, part + 1);							
-						}
-					};
-						$(document).keydown(resp_func1);
-						cat_timer = setTimeout(function() {//acts as trial timer
-							plugin.trial(display_element, block, trial, part + 1);
-							$(document).unbind('keydown', resp_func1);
-							rtc=999;
-							resp_c=999;//
-						}, 5000);
-						
-					break;
+						// start measuring response time
+							setTimeout(function() {//acts as trial timer
+								rtc=999;
+								resp_c=999;//
+								plugin.trial(display_element, block, trial, part + 1);
+							}, 5000);	
+					}
+					else if(trial.trialtype=='D'){// D only
+						rtc=999;
+						resp_c=999;//
+					plugin.trial(display_element, block, trial, part + 4);// skip to decision question
+					}
+				break;
 //*******************************************************************************************************************************
 				case 8://remove prompt1 
 					$('.face-study-stimulus').remove();
@@ -410,7 +443,7 @@
 									"class": 'face-study-stimulus'
 							}));
 						}
-						else if (resp_c==999 or resp_d==999){
+						else if(resp_c==999 || resp_d==999){
 							display_element.append($('<img>', {
 									src: "img/sorry.BMP",
 									"class": 'face-study-stimulus'
