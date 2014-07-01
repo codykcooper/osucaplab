@@ -52,8 +52,10 @@
 		var face1 = ["img/face1.jpg","img/face2.jpg"];
 		// create a function that takes face and shuffles 6 times and creates 6 columns of randomly ordered face stimuli
 		var shape=["r","r","r","r","r","r","r","r","r","r","r","r","r","r","r","r","r","n","n","n","n","n","n","n","n","n","n","n","n","n","n","n","n","n"];//will be used for prob assignment
-		var face_nat = ["Adok", "Lork"];//group membership options
-        var face_disp = ["friendly","hostile"];//disposition choices
+		var fb =["img/AcDc.BMP", "img/AcFc.BMP", "img/AcDc.BMP", "img/LcFc.BMP", "img/AwDc.BMP", "img/AwFc.BMP", "img/LwDc.BMP", "img/LwDc.BMP","img/AcDw.BMP", "img/AcFw.BMP", "img/LcDw.BMP", "img/LcDw.BMP", "img/AwDw.BMP", "img/AwFw.BMP", "img/LwDw.BMP", "img/LwDw.BMP"];
+
+
+		
 		
 		//Randomize the stimuli for the experiment 1 block only!! (i.e., 1 CD 1 XD and 1 D)
 		function randomize_stimuli(array1){// function to randomize stimuli
@@ -159,14 +161,13 @@
 		}//close the function
 		
 		var attributes_block1 = setAttribtues(stim_block1);
-		console.log(attributes_block1);
 		var attributes_block2 = setAttribtues(stim_block2);
 		
-		/*function progress(i){//needs work
+		function progress(i){//needs work
 			var my_string = "step "+ i + " out of 34 complete";
-			$('.jspsych_target').html('Please wait a moment while the experiment materials are prepared');			
-			$( ".jspsych_target" ).append(my_string);
-		};*/
+			$(".jsypsych_target").remove();
+			$( ".jspsych_target" ).append("Please wait a moment while the experiment materials are prepared<br>"+ my_string);
+		};
 		
 		/*function done(){//needs work
 			$('jspsych_target').html('Thank you for your patience. All test materials have been loaded.');
@@ -175,14 +176,7 @@
 			}, 2000); 
 		};*/
 		
-		jsPsych.preloadImages(face);//preload images to browser for better runtime during experiment
-
-		// Generating Random Order for Stimuli
-		//Fisher-Yates Shuffle copied from bost.ocks.org/mike/shuffle
-		
-		//shuffle(face,shape);//hopefully shuffles these as if there were consecutive columns of a matrix(i.e., row shuffle)
-		// use the above function to shuffle the images
-
+		jsPsych.preloadImages(face.concat(fb));//preload images to browser for better runtime during experiment
 		// Define experiment blocks
 		var consent_block = {
 				type:'html', 
@@ -210,7 +204,7 @@
 		
         jsPsych.init({
             display_element: $('#jspsych_target'),
-            experiment_structure: [CD_block,debrief_block],
+            experiment_structure: [instruction_block,CD_block,debrief_block],
             on_finish: function(data) {
                 $("#jspsych_target").append($('<pre>', {
                     html: jsPsych.dataAsCSV()
