@@ -171,19 +171,19 @@
 		
 		jsPsych.preloadImages(face.concat(fb),done,progress);//preload images to browser for better runtime during experiment
 		// Define experiment blocks
-		var Prep={
-			type:'call-function',
-			func:jsPsych.preloadImages,
-			args:[face.concat(fb)]
-			};
+		var prep = {
+                type: "text",
+                text: [" ",welcome_message],
+                timing_post_trial: 1500//amount of time after the instructions before the experiment
+            };
 		var consent_block = {
 				type:'html', 
 				pages: [{url: 'consent.html', cont_btn: "start", check_fn: check_consent}]
 				};
-
+				
         var instruction_block = {
                 type: "text",
-                text: [" ",welcome_message, instructions],
+                text: [instructions],
                 timing_post_trial: 1500//amount of time after the instructions before the experiment
             };
 
@@ -202,7 +202,7 @@
 		
         jsPsych.init({
             display_element: $('#jspsych_target'),
-            experiment_structure: [instruction_block,CD_block,debrief_block],
+            experiment_structure: [prep,consent_block,instruction_block,CD_block,debrief_block],
             on_finish: function(data) {
                 $("#jspsych_target").append($('<pre>', {
                     html: jsPsych.dataAsCSV()
