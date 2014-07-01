@@ -29,9 +29,7 @@
                 return false;
             }
         };
-	
   // Experiment parameters
-
         // Experiment Instructions
         var welcome_message = "<div id='instructions'><p>Welcome to the " +
             "experiment. Please press enter to begin.</p></div>";
@@ -50,13 +48,8 @@
 
 		// Load stimuli into array for later calling
 		var face = ["img/r1.BMP","img/r2.BMP","img/r3.BMP","img/r4.BMP","img/r5.BMP","img/r6.BMP","img/r7.BMP","img/r8.BMP","img/r9.BMP","img/r10.BMP","img/r11.BMP","img/r12.BMP","img/r13.BMP","img/r14.BMP","img/r15.BMP","img/r16.BMP","img/r17.BMP","img/n1.BMP","img/n2.BMP","img/n3.BMP","img/n4.BMP","img/n5.BMP","img/n6.BMP","img/n7.BMP","img/n8.BMP","img/n9.BMP","img/n10.BMP","img/n11.BMP","img/n12.BMP","img/n13.BMP","img/n14.BMP","img/n15.BMP","img/n16.BMP","img/n17.BMP"];//array of image locations
-		var face1 = ["img/face1.jpg","img/face2.jpg"];
 		// create a function that takes face and shuffles 6 times and creates 6 columns of randomly ordered face stimuli
-		var shape=["r","r","r","r","r","r","r","r","r","r","r","r","r","r","r","r","r","n","n","n","n","n","n","n","n","n","n","n","n","n","n","n","n","n"];//will be used for prob assignment
 		var fb =["img/AcDc.BMP", "img/AcFc.BMP", "img/AcDc.BMP", "img/LcFc.BMP", "img/AwDc.BMP", "img/AwFc.BMP", "img/LwDc.BMP", "img/LwDc.BMP","img/AcDw.BMP", "img/AcFw.BMP", "img/LcDw.BMP", "img/LcDw.BMP", "img/AwDw.BMP", "img/AwFw.BMP", "img/LwDw.BMP", "img/LwDw.BMP"];
-
-
-		
 		
 		//Randomize the stimuli for the experiment 1 block only!! (i.e., 1 CD 1 XD and 1 D)
 		function randomize_stimuli(array1){// function to randomize stimuli
@@ -166,13 +159,13 @@
 		
 		function progress(i){//needs work
 			//var div = document.getElementById("jspsych_target").innerHTML; 
-			$('#prep').html('Please wait while the experiment materials are prepared.<br>'+'step '+i+' out of 50 completed.');
+			$('#spsych_target').html('Please wait while the experiment materials are prepared.<br>'+'Step '+i+' out of 50 completed.');
 			}
 		
 		function done(){//needs work
-			$('#prep').html('Thank you for your patience. All test materials have been loaded.');
+			$('#jspsych_target').html('Thank you for your patience. All test materials have been loaded.<br> Please press enter to continue.');
 			setTimeout(function(){
-			$('#prep').remove();
+			//$('#spsych_target').remove();
 			},2000);
 		};
 		
@@ -190,7 +183,7 @@
 
         var instruction_block = {
                 type: "text",
-                text: [welcome_message, instructions],
+                text: [" ",welcome_message, instructions],
                 timing_post_trial: 1500//amount of time after the instructions before the experiment
             };
 
