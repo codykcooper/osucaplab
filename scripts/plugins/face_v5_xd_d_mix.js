@@ -17,11 +17,12 @@
 		var plugin = {};
 		plugin.create = function(params) {
 			var trials = new Array(params.stimuli.length);
+			var n = 0;// cd and x_d mix use the same attributes object. Will use this to start store the right materials
 			for(var i = 0; i < params.stimuli.length; i++)
 			{
 				trials[i] = {};
 				trials[i].type = "face-exp";
-				trials[i].img = params.attributes[i][1];
+				trials[i].img = params.attributes[i][4];
 				trials[i].shape = params.attributes[i][0];
 				trials[i].trialtype=params.attributes[i][3];//Alpha: CD XD or D
 				trials[i].group=params.attributes[i][1];//Alpha of Adok or Lork

@@ -118,21 +118,21 @@
 						}));
 					
 					}
-					if(trial.nat==65/*adok*/ && resp_d==trial.dispCD/*correct answer*/ && resp_d==76/*Defensive*/){
+					else if(trial.nat==65/*adok*/ && resp_d==trial.dispCD/*correct answer*/ && resp_d==76/*Defensive*/){
 						display_element.append($('<img>', {
 							src: "img/ADc.BMP",
 							"class": 'face-study-stimulus'
 						}));
 					
 					}
-					if(trial.nat==76/*lork*/ && resp_d==trial.dispCD/*correct answer*/ && resp_d==65/*friendly*/){
+					else if(trial.nat==76/*lork*/ && resp_d==trial.dispCD/*correct answer*/ && resp_d==65/*friendly*/){
 						display_element.append($('<img>', {
 							src: "img/LFc.BMP",
 							"class": 'face-study-stimulus'
 						}));
 					
 					}
-					if(trial.nat==76/*lork*/ && resp_d==trial.dispCD/*correct answer*/ && resp_d==76/*Defensive*/){
+					else if(trial.nat==76/*lork*/ && resp_d==trial.dispCD/*correct answer*/ && resp_d==76/*Defensive*/){
 						display_element.append($('<img>', {
 							src: "img/LDc.BMP",
 							"class": 'face-study-stimulus'
@@ -170,19 +170,16 @@
 					}
 				
 				}
-				
-				
-				
-					$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
-						width:'auto',
-						height:'100%',
-						left:'22%',
-						top:'0%',
-						position:'fixed'
-					});					
-					setTimeout(function() {
-						plugin.trial(display_element, block, trial, part+1);
-						}, 4000);
+		$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
+			width:'auto',
+			height:'100%',
+			left:'22%',
+			top:'0%',
+			position:'fixed'
+		});					
+		setTimeout(function() {
+			plugin.trial(display_element, block, trial, part+1);
+			}, 4000);
 						
 						
 						
