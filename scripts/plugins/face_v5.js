@@ -16,8 +16,8 @@
 	jsPsych["face-exp"] = (function(){
 		var plugin = {};
 		plugin.create = function(params) {
-			var trials = new Array(params.stimuli.length);
-			for(var i = 0; i < params.stimuli.length; i++)
+			var trials = new Array(6);
+			for(var i = 0; i < 6; i++)
 			{
 				trials[i] = {};
 				trials[i].type = "face-exp";
