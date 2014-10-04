@@ -153,7 +153,7 @@
 							$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
 													'font-size' : '1em',
 													top : '40%',
-													left: '28%',
+													left: '15%',
 													'text-align':'center',
 													position:'fixed'
 												});
@@ -204,7 +204,7 @@
 							$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
 													'font-size' : '1em',
 													top : '40%',
-													left: '28%',
+													left: '15%',
 													'text-align':'center',
 													position:'fixed'
 												});
@@ -266,7 +266,7 @@
 						$('.face-study-stimulus').css({//sets the display elements of the first prompt should be approximately in the middle of screen
 							'font-size' : '1em',
 							top : '40%',
-							left: '25%',
+							left: '15%',
 							'text-align':'center',
 							position:'fixed'
 						});
