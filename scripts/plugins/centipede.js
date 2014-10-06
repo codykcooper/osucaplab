@@ -106,7 +106,7 @@
 							$('.cent-study-q').css({//sets the display elements of the first prompt should be approximately in the middle of screen
 													'font-size' : '2em',
 													top : '60%',
-													left: '25%',
+													left: '30%',
 													'text-align':'center',
 													position:'fixed'
 												});
@@ -145,7 +145,7 @@
 							cat_timer = setTimeout(function() {//acts as trial timer
 								$(document).unbind('keydown', resp_func1);
 								plugin.trial(display_element, block, trial, part + 1);
-							}, 5000);
+							}, 50000);
 							break;
 //*******************************************************************************************************************************
 				case 4://remove prompt1 
