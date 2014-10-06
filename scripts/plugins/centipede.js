@@ -106,7 +106,7 @@
 							$('.cent-study-q').css({//sets the display elements of the first prompt should be approximately in the middle of screen
 													'font-size' : '2em',
 													top : '60%',
-													left: '30%',
+													left: '35%',
 													'text-align':'center',
 													position:'fixed'
 												});
