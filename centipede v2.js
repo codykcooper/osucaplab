@@ -161,7 +161,7 @@
 						pActx.fillStyle="#336600";
 						pActx.fill();
 						pActx.fillStyle="white";
-						pActx.font = '30px Arial"';
+						pActx.font = '30px';
 						pActx.fillText('A',40,60);
 						// draw the line
 						pActx.beginPath();
@@ -180,7 +180,7 @@
 						pActx.fillStyle="#336600";
 						pActx.fill();
 						pActx.fillStyle="white";
-						pActx.font = '30px Arial"';
+						pActx.font = '30px Arial';
 						pActx.fillText('A',40,60);
 						// draw the line
 						pActx.beginPath();
@@ -199,7 +199,7 @@
 						pBctx.fillStyle="#8D1919";
 						pBctx.fill();
 						pBctx.fillStyle="white";
-						pBctx.font = '30px Arial"';
+						pBctx.font = '30px Arial';
 						pBctx.fillText('B',40,60);
 						// draw the line
 						pBctx.moveTo(100, 50);//start (x,y)
@@ -218,7 +218,7 @@
 						pBctx.fillStyle="#8D1919";
 						pBctx.fill();
 						pBctx.fillStyle="white";
-						pBctx.font = '30px Arial"';
+						pBctx.font = '30px Arial';
 						pBctx.fillText('B',40,60);
 						
 						//display 1 and b so they don't move with window change
