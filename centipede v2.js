@@ -161,7 +161,7 @@
 						pActx.fillStyle="#336600";
 						pActx.fill();
 						pActx.fillStyle="white";
-						pActx.font = '30px';
+						pActx.font = '30px Arial';
 						pActx.fillText('A',40,60);
 						// draw the line
 						pActx.beginPath();
