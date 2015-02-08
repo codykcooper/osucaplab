@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dynamic Multitasking</title>
+		<script src="jquery-min.js" type="text/javascript"></script>
+		<script src="jspsych.js" type="text/javascript"></script>
+		<script src="mtfood v2.js" type="text/javascript"></script>
+	
+        <!-- Load the jspsych library and plugins -->
+    </head>
+    <body>
+		<div id="jspsych_target"></div>
+    </body>
+    <script type="text/javascript">
+
+
+	var cent_block = {
+        type: "mtfood"
+    };
+	    jsPsych.init({
+            display_element: $('#jspsych_target'),
+            experiment_structure: [cent_block],
+            on_finish: function(data) {
+                jsPsych.dataAPI.displayData();
+            }
+        });
+    </script>
+	
+</html>
