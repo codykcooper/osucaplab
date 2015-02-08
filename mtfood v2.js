@@ -129,8 +129,31 @@
 				}
 			return matrix;
 			}
+		// rbstim randomly selects 2 cells and changes the contents
+		function rbstim(x){
+			var possible = "abcdefghijklmnopqrstuvwxyz";
+			var matrix = new Array(9);
+			var n = Math.floor((Math.random() * 10));
+			var nn = Math.floor((Math.random() * 10));
+			for(var i=0; i <9;i++){
+				var text = "";
+				if(i==n || i==nn){
+				text += possible.charAt(Math.floor(Math.random() * possible.length)) + possible.charAt(Math.floor(Math.random() * possible.length));
+				matrix[i]=text;
+				}else{
+				matrix[i]=x[i];
+				}
+			}		
+			return matrix;
+		}
+			
 		ra = ranstim();
-		
+		var trial_type = Math.floor((Math.random() * 2)+1);
+		if(trial_type == 1){//set to match
+		rb = ra;}
+		else if (trial_type ==2){
+		rb = rbstim(ra);
+		}
 		// Draw the left grid
 		var leftgrid = document.getElementById("LG");
 		var contexta = leftgrid.getContext("2d");
@@ -174,17 +197,17 @@
 				contextb.stroke();
 				
 				contextb.font="25px Arial"; // # numbers indicate row and column placement in the grid
-				contextb.fillText(ra[0],40,55); 
-				contextb.fillText(ra[1],40,135); 
-				contextb.fillText(ra[2],40,215); 
+				contextb.fillText(rb[0],40,55); 
+				contextb.fillText(rb[1],40,135); 
+				contextb.fillText(rb[2],40,215); 
 				 
-				contextb.fillText(ra[3],120,55); 
-				contextb.fillText(ra[4],120,135); 
-				contextb.fillText(ra[5],120,215); 
+				contextb.fillText(rb[3],120,55); 
+				contextb.fillText(rb[4],120,135); 
+				contextb.fillText(rb[5],120,215); 
 				 
-				contextb.fillText(ra[6],200,55); 
-				contextb.fillText(ra[7],200,135); 
-				contextb.fillText(ra[8],200,215); 
+				contextb.fillText(rb[6],200,55); 
+				contextb.fillText(rb[7],200,135); 
+				contextb.fillText(rb[8],200,215); 
 			}
 			drawBoarda();
 			drawBoardb();
@@ -208,6 +231,12 @@
 								contexta.clearRect ( 0 , 0 , bw, bh);// remove left grid before redraw
 								contextb.clearRect ( 0 , 0 , bw, bh);// remove right grid before redraw
 								ra = ranstim();
+								trial_type = Math.floor((Math.random() * 2)+1);
+									if(trial_type == 1){//set to match
+									rb = ra;}
+									else if (trial_type ==2){
+									rb = rbstim(ra);
+									}
 								drawBoarda();
 								drawBoardb();
 								//plugin.trial(display_element, block, trial, part=1);
