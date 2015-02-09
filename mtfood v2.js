@@ -41,7 +41,7 @@
 		var cw = 1.5*bw + (p*2) + 1;
 		var ch = bh + (p*2) + 1;
 	//********************* TRIAL CONSTRUCTION ***********************************
-						if (trial.prompt1 !== "") {
+						
 						display_element.append($('<div>', { //stage1 is the main experimental container, all other things are placed relative to this
 							"id": 'grids'
 						}));
@@ -58,6 +58,7 @@
 													'border-radius': '25px',
 													position:'fixed'
 												});
+						
 						$("#grids").append($('<canvas>', {
 							"id": 'LG'
 							}));
@@ -81,7 +82,7 @@
 						
 						$("#grids").append($('<div>',{
 							"id": 'match',
-							html: 'P - Match'
+							html: 'L - Match'
 							}));
 							$('#match').css({//sets the display elements of the first prompt should be approximately in the middle of screen
 													top : '15%',
@@ -98,7 +99,7 @@
 												});	
 						$("#grids").append($('<div>',{
 							"id": 'mismatch',
-							html: 'I - Mismatch'
+							html: 'J - Mismatch'
 							}));
 							$('#mismatch').css({//sets the display elements of the first prompt should be approximately in the middle of screen
 													top : '25%',
@@ -113,7 +114,7 @@
 													border: '1px solid',
 													position:'absolute'
 												});	
-						}
+						
 	
 		// ********************* DRAWING Grids **********************************
 			//grid width and height
@@ -146,7 +147,6 @@
 			}		
 			return matrix;
 		}
-			
 		ra = ranstim();
 		var trial_type = Math.floor((Math.random() * 2)+1);
 		if(trial_type == 1){//set to match
@@ -211,7 +211,7 @@
 			}
 			drawBoarda();
 			drawBoardb();
-//		*****************		Response Functions	*******************************
+//		*****************		Response Functions			*******************************
 						// start measuring response time
 						var startTime = (new Date()).getTime();
 						// create the function that triggers when a key is pressed.
@@ -219,17 +219,17 @@
 						var flag_end = false;
 	//*********************** FUNCTION DETECTING AFTER KEY PRESS *********************
 						var resp_grid = function(g1) { 
-							if (g1.which == 73 || g1.which == 80) // if the participant presses enter 
+							if (g1.which == 74 || g1.which == 76) // if the participant presses enter 
 							{
 								flag_continue = true;//
 								resp_grid=g1.which;
 							}
 							if (flag_continue) {
 								var endTime = (new Date()).getTime();
-								rtcent = (endTime - startTime);
+								rtgrid = (endTime - startTime);
 								$(document).unbind('keydown', resp_grid); // remove response function from keys
-								contexta.clearRect ( 0 , 0 , bw, bh);// remove left grid before redraw
-								contextb.clearRect ( 0 , 0 , bw, bh);// remove right grid before redraw
+								contexta.clearRect (0,0,bw,bh);// remove left grid before redraw
+								contextb.clearRect (0,0,bw,bh);// remove right grid before redraw
 								ra = ranstim();
 								trial_type = Math.floor((Math.random() * 2)+1);
 									if(trial_type == 1){//set to match
@@ -241,29 +241,87 @@
 								drawBoardb();
 								//plugin.trial(display_element, block, trial, part=1);
 							}
+							flag_continue = false;
 						};
 						$(document).keydown(resp_grid);
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+						
+				$("#grids").append($('<img>', {
+							"id":"imgleft",
+							src: "C:/Users/Cody/Desktop/Research Projects/MT Dynamic Game/static/img/sb.bmp"
+						}));				
+					$('#imgleft').css({//sets the display elements of the first prompt should be approximately in the middle of screen
+													top : '60%',
+													left: '4%',
+													width: '240px',
+													height: '240px',
+													'text-align':'center',
+													'font-size':'25px',
+													'color':'black',
+													'border-radius': '5px',
+													'border-color': 'black',
+													border: '1px solid',
+													position:'absolute'
+												});			
+
+					$("#grids").append($('<img>', {
+							"id":"imgright",
+							src: "C:/Users/Cody/Desktop/Research Projects/MT Dynamic Game/static/img/whale.bmp"
+						}));				
+					$('#imgright').css({//sets the display elements of the first prompt should be approximately in the middle of screen
+													top : '60%',
+													left: '70%',
+													width: '240px',
+													height: '240px',
+													'text-align':'center',
+													'font-size':'25px',
+													'color':'black',
+													'border-radius': '5px',
+													'border-color': 'black',
+													border: '1px solid',
+													position:'absolute'
+												});
+					$("#grids").append($('<div>',{
+							"id": 'choice',
+							html: 'Press "A" to choose the item on the left <br> Press "D" to choose the item on the right'
+							}));
+							$('#choice').css({//sets the display elements of the first prompt should be approximately in the middle of screen
+													top : '47%',
+													left: '22%',
+													width: '500px',
+													height: '65px',
+													'text-align':'center',
+													'font-size':'25px',
+													'color':'black',
+													'border-radius': '5px',
+													'border-color': 'black',
+													border: '1px solid',
+													position:'absolute'
+												});		
+					var flag_pic=false;							
+					var resp_pic= function(p1) { 
+							if (p1.which == 65 || p1.which == 68) // if the participant presses enter 
+							{
+								flag_pic = true;//
+								resp_pic = p1.which;
+							}
+							if (flag_pic) {
+								var endTime = (new Date()).getTime();
+								rtpic = (endTime - startTime);
+								$(document).unbind('keydown', resp_pic); // remove response function from keys
+								
+								flag_pic=false;	
+								
+								$('#imgright').attr('src',"C:/Users/Cody/Desktop/Research Projects/MT Dynamic Game/static/img/sb.bmp");
+								//plugin.trial(display_element, block, trial, part=1);
+							}
+							var flag_continue = false;
+						};
+						$(document).keydown(resp_pic);
+
+
+
+
+												
 	
         };
         return plugin;
