@@ -562,6 +562,7 @@
 							}, 5000);
 			break;
 			case 2:
+			clearInterval(pic_timer);
 			a=1;
 				//$('#grids').remove();
 				$(document).unbind('keydown', resp_pic); // remove response function from keys
