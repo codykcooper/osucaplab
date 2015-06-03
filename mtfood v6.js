@@ -1,14 +1,11 @@
 /**
- * Centipede for the OSU Caplab
+ * Multitasking experiment for the OSU Caplab
  * Code by Cody Cooper
  *
  * Based on work by:
  * Josh de Leeuw
  * November 2013
  * 
- * This is a basic template for a jsPsych plugin. Use it to start creating your
- * own plugin. There is more information about how to create a plugin on the
- * jsPsych wiki (https://github.com/jodeleeuw/jsPsych/wiki/Create-a-Plugin).
  * 
  * 
  */
@@ -357,16 +354,21 @@
 		grid1 = '';grid2 = '';grid3 = '';grid4 = '';grid5 = '';
 		grid6 = '';grid7 = '';grid8 = '';grid9 = '';grid10 = '';
 		grid11 = '';grid12 = '';grid13 = '';grid14 = '';grid15= '';
+		
 		gRT1 = '';gRT2 = '';gRT3 = '';gRT4 = '';gRT5 = '';
 		gRT6 = '';gRT7 = '';gRT8 = '';gRT9 = '';gRT10 = '';
 		gRT11 = '';gRT12 = '';gRT13 = '';gRT14 = '';gRT15= '';
+		
+		// set the image for the new trial
 			$("#imgleft").attr({src:trial.Limg});
 			$("#imgright").attr({src:trial.Rimg});
+			
+		// define the response function of the grid
 					var resp_grid = function(g1) { 
 							if (g1.which == 74 || g1.which == 76) // if the participant presses enter 
 							{
-								flag_continue = true;//
-								switch(a){
+								flag_continue = true;// 
+								switch(a){//used to determine which variable to write to. Can't figure out how to write array in trial_data. Would be more efficient.
 									case 1:
 										grid1=g1.which;
 										gRT1 = (new Date()).getTime()-startTimegrid;
@@ -429,9 +431,10 @@
 									break;
 								}//end switch
 							}
-							if (flag_continue) {
+							if (flag_continue) {// not necessary but seperating everyhing out.
 								clearInterval(grid_timer);
 								//rtgrid[a] = (endTime - startTimegrid);
+								// should write as a function
 								leftgrid = document.getElementById("LG");
 								contexta = leftgrid.getContext("2d");
 								rightgrid = document.getElementById("RG");
@@ -451,7 +454,7 @@
 								a=a+1;
 								flag_continue = false;
 //**********************************************Gird Timer *****************************************************************************************************************************
-							grid_timer = setInterval(function() {//acts as trial timer for the grid
+							grid_timer = setInterval(function() {//acts as trial timer for the grid. Have to place in response function to reset. Callback to original?
 							switch(a){
 									case 1:
 										grid1=9999;
@@ -572,18 +575,18 @@
 								trial_index: block.trial_idx,
 								"Pic_Resp": pic_Resp,
 								'Pic_RT':rtpic,
+								// grid response data
 								'grid1':grid1,'grid2':grid2,'grid3':grid3,'grid4':grid4,'grid5':grid5,
 								'grid6':grid6,'grid7':grid7,'grid8':grid8,'grid9':grid9,'grid10':grid10,
 								'grid11':grid11,'grid12':grid12,'grid13':grid13,'grid14':grid14,'grid15':grid15,
-								
+								//Grid RT data
 								'gRT1':gRT1,'gRT2':gRT2,'gRT3':gRT3,'gRT4':gRT4,'gRT5':gRT5,
 								'gRT6':gRT6,'gRT7':gRT7,'gRT8':gRT8,'gRT9':gRT9,'gRT10':gRT10,
 								'gRT11':gRT11,'gRT12':gRT12,'gRT13':gRT13,'gRT14':gRT14,'gRT15':gRT15,
-								
+								// Image shown during experiment
 								'Left_image':trial.Limg,
 								'Right_image':trial.Rimg
 							};
-		
 							block.writeData($.extend({}, trial_data, trial.data));
 					setTimeout(function() {block.next();}, 100);//need to wait so data can write
 			break;
