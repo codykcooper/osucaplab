@@ -70,12 +70,12 @@
 
 			//show prompt if there is one
 			if (trial.prompt !== "") {
-			display_element.append($('<div>', {
+			$("#video").append($('<div>', {
 			html: trial.prompt,
 			"id": 'question'
 			}));
 			$('#question').css({//sets the display elements of the first prompt should be approximately in the middle of screen
-				top : '45%',
+				top : 250,
 				'margin-left': 'auto',
 				'margin-right': 'auto',
 				left: 0,
