@@ -9,7 +9,7 @@
  **/
 
 (function($) {
-	jsPsych["single-stim"] = (function() {
+	jsPsych["CRM"] = (function() {
 
 		var plugin = {};
 
@@ -17,7 +17,7 @@
 
 			params = jsPsych.pluginAPI.enforceArray(params, ['stimuli', 'choices']);
 
-			var trials = new Array(params.stimuli.length);
+			var trials = new Array(1);
 			for (var i = 0; i < trials.length; i++) {
 				trials[i] = {};
 				trials[i].a_path = params.stimuli[i];
@@ -40,17 +40,12 @@
 			var response = {y: 0, time: -1};
 			var rating = [];
 			var rating_time = [];
+			var v;
 			// this array holds handlers from setTimeout calls
 			// that need to be cleared if the trial ends early
 			var setTimeoutHandlers = [];
 
 			// display stimulus
-			if (!trial.is_html) {
-				display_element.append($('<img>', {
-					src: trial.a_path,
-					id: 'video'
-				}));
-			} else {
 				display_element.append($('<div>', {
 					html: trial.a_path,
 					id: 'video'
@@ -65,8 +60,6 @@
 						height:640,
 						position:'absolute'
 					});
-				
-			}
 
 			//show prompt if there is one
 			if (trial.prompt !== "") {
@@ -100,7 +93,7 @@
 				"background-color":"gray",
 				position:'absolute'
 			});
-			// The bar for the rating (moving thingy
+			// The bar for the rating (moving thingy)
 			$("#video").append($('<canvas>', {
 			"id": 'bar'
 			}));
@@ -162,26 +155,27 @@
 				$(document).keydown(moveSelection);
 				sample_timer=setInterval(function() {//acts as timer for sampling rate
 								rating.push(response.y);
-								rating_time.push((new Date()).getTime());//
+								rating_time.push(document.getElementById("video").childNodes[0].currentTime);//
+								v = document.getElementById("video").childNodes[0].ended;
+								//alert(v);
+								end_all();
 							}, 1000);//sample the cursor position every second
 			// function to end trial when it is time
-			var end_trial = function() {
-
+		function end_all(){
+			if(v){
 				// kill any remaining setTimeout handlers
 				for (var i = 0; i < setTimeoutHandlers.length; i++) {
 					clearTimeout(setTimeoutHandlers[i]);
 				}
 
 				// kill keyboard listeners
-				if(typeof keyboardListener !== 'undefined'){
-					jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
-				}
-
+				$(document).unbind('keydown', moveSelection);
+					
 				// gather the data to store for the trial
 				var trial_data = {
-					"time": rating_time,
+					"rating_time": rating_time.join('-'),
 					"stimulus": trial.a_path,
-					"value": rating
+					"rating": rating.join('-')
 				};
 
 				jsPsych.data.write(trial_data);
@@ -191,17 +185,8 @@
 
 				// move on to the next trial
 				jsPsych.finishTrial();
-			};
-
-				if (trial.response_ends_trial) {
-					end_trial();
-				}
-
-
-
-
-
-
+			}
+			}
 
 		};
 
