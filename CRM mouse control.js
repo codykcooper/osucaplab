@@ -15,13 +15,14 @@
 
 		plugin.create = function(params) {
 
-			params = jsPsych.pluginAPI.enforceArray(params, ['stimuli', 'choices']);
+			params = jsPsych.pluginAPI.enforceArray(params, ['stimuli', 'poles']);
 
 			var trials = new Array(1);
 			for (var i = 0; i < trials.length; i++) {
 				trials[i] = {};
 				trials[i].a_path = params.stimuli[i];
-				trials[i].choices = params.choices || [];
+				trials[i].left = params.poles[0];
+				trials[i].right = params.poles[1];
 				// optional parameters
 				trials[i].is_html = (typeof params.is_html === 'undefined') ? false : params.is_html;
 				trials[i].high = (typeof params.high === 'undefined') ? 100 : params.high;
@@ -88,21 +89,34 @@
 			}
 		
 		$("#video").append($('<div>', {
-			"class": "test-result",
 			"id":"test-result",
-			html:'0'
+			html:'0%'
 			}));
-			$('.test-result').css({//sets the display elements of the first prompt should be approximately in the middle of screen
+			$('#test-result').css({//sets the display elements of the first prompt should be approximately in the middle of screen
+				top : '105%',
+				'margin-left': 'auto',
+				'margin-right': 'auto',
+				left: 0,
+				right: 0,
+				width: '400px',
+				height: '500px',
+				'text-align':'center',
+				'font-size':'25px',
 				position:'absolute',
-				top:'10px',
-				left:'50%',
 				'line-height':5,
+				'-moz-user-select':'-moz-none',
+				'-o-user-select':'none',
+				'-khtml-user-select':'none', /* you could also put this in a class */
+				'-webkit-user-select':'none',/* and add the CSS class here instead */
+				'-ms-user-select':'none',
+				'user-select':'none'
 							});
 			// add the line for the scale
 			$("#video").append($('<div>', {
 			"id":"range-slider"
 			}));
 			$("#range-slider").append( "<span></span>");
+			
 			$('#range-slider').css({//sets the display elements of the first prompt should be approximately in the middle of screen
 				width:'100%',
 				left:'0%',
@@ -128,7 +142,7 @@
 				position:'relative',
 				left:0,
 				height:'10px',
-				'background-color':'blue'
+				'background-color':'black'
 			});
 			
 			$('#range-slider span').css({	
@@ -181,6 +195,7 @@
 				
 				rangeSlider('range-slider', function(value) {
 				document.getElementById('test-result').innerHTML =  value+'%' ;
+				response.y=value;
 			});
 
 				sample_timer=setInterval(function() {//acts as timer for sampling rate
@@ -199,7 +214,6 @@
 				}
 
 				// kill keyboard listeners
-				$(document).unbind('keydown', moveSelection);
 					
 				// gather the data to store for the trial
 				var trial_data = {
