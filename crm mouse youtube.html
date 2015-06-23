@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <title>My experiment</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="jspsych-4.2.js"></script>
+    <script src="CRM mouse control v3.js"></script>
+    <link href="jspsych-4.2/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+  </head>
+  <body>
+ </body>
+  <script>
+  var stimulus = '<video width="700" height="240" autoplay>'+
+  '<source src="http://video-js.zencoder.com/oceans-clip.mp4">'+
+  '</video>';
+
+var trial = {
+  type: 'CRM',
+  stimuli: [stimulus],
+  is_html: true,
+  choices: ['enter'],
+  prompt:'How cool is the ocean? Use the left and right arrows to respond.'
+}
+
+    /* create experiment definition array */
+    var experiment = [];
+    experiment.push(trial);
+    /* start the experiment */
+    jsPsych.init({
+      experiment_structure: experiment,
+      on_finish: function() {
+        jsPsych.data.localSave('data.csv', 'csv');
+      }
+    });
+  </script>
+</html>
