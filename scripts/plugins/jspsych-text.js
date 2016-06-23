@@ -13,9 +13,7 @@
         var plugin = {};
 
         plugin.create = function(params) {
-            
-            params = jsPsych.enforceArray(params, ['text','data']);
-            
+                        
             var trials = new Array(params.text.length);
             for (var i = 0; i < trials.length; i++) {
                 trials[i] = {};
@@ -33,7 +31,6 @@
             // if any trial variables are functions
             // this evaluates the function and replaces
             // it with the output of the function
-            trial = jsPsych.normalizeTrialVariables(trial);
             
             // set the HTML of the display target to replaced_text.
             display_element.html(trial.text);

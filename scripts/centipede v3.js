@@ -160,7 +160,7 @@
 						pBctx.fillStyle=red;
 						pBctx.fill();
 						pBctx.fillStyle="white";
-						pBctx.font = '50px Arial"';
+						pBctx.font = '50px Arial';
 						pBctx.fillText('B',50,80);
 // *************************** TRIAL OPERATIONS ********************************	
 						// start measuring response time
@@ -303,7 +303,7 @@
 						pBctx.fillStyle=red;
 						pBctx.fill();
 						pBctx.fillStyle="white";
-						pBctx.font = '50px Arial"';
+						pBctx.font = '50px Arial';
 						pBctx.fillText('B',50,80);
 // *************************** TRIAL OPERATIONS ********************************	
 						// start measuring response time

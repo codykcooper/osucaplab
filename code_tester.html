@@ -1,30 +1,33 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>My experiment</title>
-        <!-- Load jQuery -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <!-- Load the jspsych library and plugins -->
-        <script src="scripts/jspsych.js"></script>
-        <script src="scripts/plugins/jspsych-text.js"></script>
-		<script src="scripts/plugins/jspsych-html.js"></script>
-        <!-- Load the stylesheet -->
-        <link href="experiment.css" type="text/css" rel="stylesheet"></link>
+        <title>My code tester</title>
+		
     </head>
 
     <body>
-        <div id="jspsych_target"></div>
+      <p id = "p1" style = "font-size:100px; text-align:center"?></p>
+	  
     </body>
 
     <script type="text/javascript">
-		var resp = ["1. Yes, Yes <br> 2. Yes, No <br> 3. No, Yes <br> 4. No, No"];
-
+	
+	var x = Math.random()*10;
+	
+	function myFunction(a,b){
+		var out =[];
+		for(z=0;z<100;z++){
+			out[z] = (a+z)*b +'<br>';
+		}
+	return out;
 		
-		
-		//for (i=0;i<attributes_block1.length;i++)
-			//{
-			document.write(resp);
-			//}
-
+	}
+	
+	x = myFunction(9,6);
+	
+	document.getElementById('p1').innerHTML = x;
+	
+	
+	
     </script>
 </html>
