@@ -35,8 +35,8 @@
 			return trials;
 		};
 		plugin.trial = function(display_element, block, trial, part) {
-		var green = '#66C266';
-		var red = "#8D1919";
+		var grn = '#66C266';
+		var rd = "#8D1919";
 
 		//start the experiment
 		var n = 0;
